@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameHub Pro — دليل إعداد الشبكة</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --bg: #080c14;
+    --surface: #0f1624;
+    --surface2: #151f30;
+    --border: #1a2840;
+    --accent: #00ff88;
+    --accent2: #0088ff;
+    --accent3: #ff6b35;
+    --text: #dde4f0;
+    --muted: #4a6080;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Tajawal', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(0,255,136,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(0,136,255,0.04) 0%, transparent 50%);
+  }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,12,20,0.97);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo h1 { font-size: 18px; font-weight: 700; color: white; }
+  .logo p { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  .header-badge {
+    display: flex; gap: 8px;
+  }
+  .badge {
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-family: var(--mono);
+  }
+  .badge.green { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--accent); }
+  .badge.blue  { background: rgba(0,136,255,0.08); border: 1px solid rgba(0,136,255,0.2); color: var(--accent2); }
+
+  /* ── Container ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 28px; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 40px 0 36px;
+    margin-bottom: 8px;
+  }
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .hero h1 {
+    font-size: 34px; font-weight: 900;
+    background: linear-gradient(135deg, white 30%, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1.2; margin-bottom: 14px;
+  }
+  .hero p { font-size: 15px; color: var(--muted); max-width: 480px; margin: 0 auto 24px; line-height: 1.7; }
+
+  .hero-stats {
+    display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+  .stat-num { font-size: 24px; font-weight: 900; color: var(--accent); font-family: var(--mono); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Network Diagram ── */
+  .diagram-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .diagram-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .diagram-title {
+    font-size: 13px; color: var(--muted);
+    font-family: var(--mono); margin-bottom: 24px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  .network-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .net-server {
+    background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,136,255,0.1));
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 12px;
+    padding: 14px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .net-server-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+  .net-server-label { font-size: 13px; font-weight: 700; color: white; }
+  .net-server-sub { font-size: 11px; color: var(--accent); font-family: var(--mono); }
+
+  .net-line-down {
+    width: 2px; height: 28px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    position: relative;
+  }
+  .net-line-down::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+  }
+
+  .net-router {
+    background: rgba(0,136,255,0.08);
+    border: 1px solid rgba(0,136,255,0.3);
+    border-radius: 12px;
+    padding: 14px 28px;
+    text-align: center;
+  }
+  .net-router-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+  .net-router-label { font-size: 13px; font-weight: 700; color: white; }
+  .net-router-sub { font-size: 11px; color: var(--accent2); font-family: var(--mono); }
+
+  .net-branches {
+    display: flex;
+    gap: 12px;
+    margin-top: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    padding-top: 28px;
+  }
+  .net-branches::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 28px;
+    background: var(--accent2);
+  }
+
+  .net-pc {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 80px;
+    transition: all 0.2s;
+  }
+  .net-pc:hover { border-color: rgba(0,255,136,0.3); transform: translateY(-2px); }
+  .net-pc-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .net-pc-label { font-size: 11px; color: var(--accent); font-family: var(--mono); }
+  .net-pc-sub { font-size: 10px; color: var(--muted); }
+
+  /* ── Shopping List ── */
+  .shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .shop-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .shop-item:hover { border-color: rgba(0,255,136,0.2); }
+  .shop-icon { font-size: 32px; flex-shrink: 0; }
+  .shop-info h4 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .shop-info p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .shop-qty {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+
+  /* ── Section ── */
+  .section-title {
+    display: flex; align-items: center; gap: 12px;
+    margin: 40px 0 20px;
+  }
+  .section-num {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 600; font-size: 13px; color: #000;
+    flex-shrink: 0;
+  }
+  .section-title h2 { font-size: 18px; font-weight: 700; color: white; }
+  .section-title p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Steps ── */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.2s;
+    overflow: hidden;
+  }
+  .step:hover { border-color: rgba(0,255,136,0.2); transform: translateX(-2px); }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.25);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .step-content { min-width: 0; width: 100%; overflow: hidden; }
+  .step-content h4 { font-size: 14px; font-weight: 600; color: white; margin-bottom: 5px; }
+  .step-content p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+
+  /* ── CMD ── */
+  .cmd {
+    background: #060a10;
+    border: 1px solid #1a2840;
+    border-right: 3px solid var(--accent);
+    border-radius: 7px;
+    padding: 9px 13px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    direction: ltr;
+    text-align: left;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+    display: block;
+  }
+  .cmd:hover { background: #0a1018; border-color: rgba(0,255,136,0.5); }
+  .cmd::before { content: '$ '; color: var(--muted); }
+  .cmd.copied { border-color: white; color: white; }
+
+  .cmd-block {
+    background: #060a10;
+    border: 1px solid #1a2840;
+    border-right: 3px solid var(--accent2);
+    border-radius: 7px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #60a5fa;
+    margin-top: 8px;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    line-height: 1.8;
+    overflow-x: auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .cmd-label {
+    font-size: 11px; color: var(--muted);
+    font-family: var(--mono); margin-bottom: 3px;
+    display: block; margin-top: 10px;
+  }
+
+  /* ── Note ── */
+  .note {
+    display: flex; gap: 8px; padding: 10px 14px;
+    border-radius: 7px; font-size: 12px; margin-top: 8px;
+    align-items: flex-start; line-height: 1.5;
+  }
+  .note.green  { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.15); color: #6ee7b7; }
+  .note.blue   { background: rgba(0,136,255,0.06); border: 1px solid rgba(0,136,255,0.15); color: #93c5fd; }
+  .note.orange { background: rgba(255,107,53,0.06); border: 1px solid rgba(255,107,53,0.15); color: #fdba74; }
+  .note.red    { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); color: #fca5a5; }
+
+  /* ── IP Table ── */
+  .ip-table { width: 100%; border-collapse: collapse; }
+  .ip-table th {
+    text-align: right; padding: 10px 14px;
+    font-size: 11px; color: var(--muted);
+    font-family: var(--mono); border-bottom: 1px solid var(--border);
+    font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .ip-table td {
+    padding: 11px 14px; font-size: 13px;
+    border-bottom: 1px solid rgba(26,40,64,0.5);
+    vertical-align: middle;
+  }
+  .ip-table tr:last-child td { border-bottom: none; }
+  .ip-table tr:hover td { background: rgba(0,255,136,0.02); }
+
+  .ip-chip {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--accent2);
+    background: rgba(0,136,255,0.08);
+    padding: 3px 10px; border-radius: 5px;
+    display: inline-block;
+  }
+  .role-chip {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    font-family: var(--mono);
+  }
+  .role-server { background: rgba(0,255,136,0.08); color: var(--accent); border: 1px solid rgba(0,255,136,0.2); }
+  .role-client { background: rgba(0,136,255,0.08); color: var(--accent2); border: 1px solid rgba(0,136,255,0.2); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .check-box {
+    width: 20px; height: 20px; border: 2px solid var(--border);
+    border-radius: 4px; flex-shrink: 0; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .check-box:hover { border-color: var(--accent); }
+  .check-box.checked { background: var(--accent); border-color: var(--accent); }
+  .check-box.checked::after { content: '✓'; color: #000; font-size: 12px; font-weight: 900; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 40px 0 24px;
+    color: var(--muted); font-size: 12px;
+    border-top: 1px solid var(--border); margin-top: 48px;
+  }
+  footer strong { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 18px; }
+    .container { padding: 20px 14px; }
+    .shop-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 24px; }
+    .net-branches { gap: 8px; }
+    .net-pc { min-width: 65px; }
+  }
+
+  @media print {
+    body { background: white; color: black; }
+    .cmd { color: #0369a1; background: #f0f9ff; }
+    .card, .step { border: 1px solid #e2e8f0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌐</div>
+    <div>
+      <h1>GameHub Pro</h1>
+      <p>network setup guide</p>
+    </div>
+  </div>
+  <div class="header-badge">
+    <span class="badge green">6 Devices</span>
+    <span class="badge blue">LAN Network</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-label">// cafe network setup</span>
+    <h1>دليل إعداد شبكة الكافيه</h1>
+    <p>ربط 6 أجهزة مع لابتوبك على شبكة واحدة وتشغيل GameHub تلقائياً على كل جهاز</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">أجهزة كلاينت</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">سيرفر (لابتوبك)</div></div>
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">كابلات LAN</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">راوتر 8 ports</div></div>
+    </div>
+  </div>
+
+  <!-- Network Diagram -->
+  <div class="diagram-card">
+    <div class="diagram-title">// topology — شكل الشبكة</div>
+    <div class="network-visual">
+      <div class="net-server">
+        <span class="net-server-icon">💻</span>
+        <div class="net-server-label">لابتوبك — السيرفر</div>
+        <div class="net-server-sub">192.168.1.100 · port 8000</div>
+      </div>
+      <div class="net-line-down"></div>
+      <div class="net-router">
+        <span class="net-router-icon">📡</span>
+        <div class="net-router-label">Router — 8 Ports</div>
+        <div class="net-router-sub">192.168.1.1</div>
+      </div>
+      <div class="net-branches">
+        <div class="net-pc"><span class="net-pc-icon">🖥️</span><div class="net-pc-label">PC-01</div><div class="net-pc-sub">.101</div></div>
+        <div class="net-pc"><span class="net-pc-icon">🖥️</span><div class="net-pc-label">PC-02</div><div class="net-pc-sub">.102</div></div>
+        <div class="net-pc"><span class="net-pc-icon">🖥️</span><div class="net-pc-label">PC-03</div><div class="net-pc-sub">.103</div></div>
+        <div class="net-pc"><span class="net-pc-icon">🖥️</span><div class="net-pc-label">PC-04</div><div class="net-pc-sub">.104</div></div>
+        <div class="net-pc"><span class="net-pc-icon">🎮</span><div class="net-pc-label">PS-01</div><div class="net-pc-sub">.105</div></div>
+        <div class="net-pc"><span class="net-pc-icon">🎮</span><div class="net-pc-label">PS-02</div><div class="net-pc-sub">.106</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping List -->
+  <div class="section-title">
+    <div class="section-num">0</div>
+    <div><h2>قائمة الشراء</h2><p>اللي تحتاجه قبل تبدأ</p></div>
+  </div>
+
+  <div class="shop-grid">
+    <div class="shop-item">
+      <div class="shop-icon">📡</div>
+      <div class="shop-info">
+        <h4>راوتر 8 Ports</h4>
+        <p>أي راوتر يدعم 8 منافذ LAN — TP-Link أو D-Link مناسبين</p>
+        <span class="shop-qty">× 1 حبة</span>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">🔌</div>
+      <div class="shop-info">
+        <h4>كابلات LAN (Cat5e أو Cat6)</h4>
+        <p>6 كابلات للأجهزة + 1 للابتوبك — اختار طول مناسب للغرفة</p>
+        <span class="shop-qty">× 7 كابلات</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — Router Setup -->
+  <div class="section-title">
+    <div class="section-num">1</div>
+    <div><h2>إعداد الراوتر</h2><p>توصيل الأجهزة على الشبكة</p></div>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>وصّل الراوتر بالكهرباء وشغّله</h4>
+          <p>انتظر دقيقة حتى يشتغل بالكامل</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>وصّل لابتوبك بالراوتر بكابل LAN</h4>
+          <p>في أي منفذ من الـ 8 منافذ</p>
+          <div class="note blue">💡 لابتوبك هو السيرفر — لازم يكون متصل دايماً</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>وصّل الـ 6 أجهزة بالراوتر</h4>
+          <p>كل جهاز بكابل LAN منفصل في منفذ مختلف</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>تحقق من الاتصال على لابتوبك</h4>
+          <div class="cmd" onclick="copyCmd(this)">ipconfig</div>
+          <div class="note green">✅ دوّن الـ IPv4 Address — هذا IP السيرفر اللي رح تحتاجه</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IP Table -->
+  <div class="section-title">
+    <div class="section-num">2</div>
+    <div><h2>جدول الـ IP addresses</h2><p>سجّل هنا IP كل جهاز</p></div>
+  </div>
+
+  <div class="card">
+    <table class="ip-table">
+      <thead>
+        <tr>
+          <th>الجهاز</th>
+          <th>الكود في النظام</th>
+          <th>IP Address</th>
+          <th>الدور</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>💻 لابتوبك</td>
+          <td style="color: var(--muted); font-size: 12px">—</td>
+          <td><span class="ip-chip">192.168.1.___</span></td>
+          <td><span class="role-chip role-server">SERVER</span></td>
+        </tr>
+        <tr><td>🖥️ جهاز 1</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PC-01</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+        <tr><td>🖥️ جهاز 2</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PC-02</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+        <tr><td>🖥️ جهاز 3</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PC-03</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+        <tr><td>🖥️ جهاز 4</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PC-04</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+        <tr><td>🎮 جهاز 5</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PS-01</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+        <tr><td>🎮 جهاز 6</td><td style="color: var(--muted); font-family: monospace; font-size: 12px">PS-02</td><td><span class="ip-chip">192.168.1.___</span></td><td><span class="role-chip role-client">CLIENT</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3 — Server Setup -->
+  <div class="section-title">
+    <div class="section-num">3</div>
+    <div><h2>إعداد السيرفر (لابتوبك)</h2><p>يجب تنفيذ هذا مرة واحدة فقط</p></div>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>شغّل الباك-إند على الشبكة كاملة</h4>
+          <p>بدل ما يشتغل على localhost فقط، خليه يقبل اتصالات من كل الأجهزة:</p>
+          <div class="cmd" onclick="copyCmd(this)">cd C:\Users\%USERNAME%\Desktop\gamehub-backend-main\gamehub-backend-main</div>
+          <div class="cmd" onclick="copyCmd(this)" style="margin-top: 6px">py manage.py runserver 0.0.0.0:8000</div>
+          <div class="note green">✅ هيك كل الأجهزة على الشبكة يقدروا يوصلوا للسيرفر</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>افتح البورت 8000 في الـ Firewall</h4>
+          <p>شغّل CMD كـ Administrator:</p>
+          <div class="cmd" onclick="copyCmd(this)">netsh advfirewall firewall add rule name="GameHub" dir=in action=allow protocol=TCP localport=8000</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>اعرف IP لابتوبك</h4>
+          <div class="cmd" onclick="copyCmd(this)">ipconfig</div>
+          <p style="margin-top: 8px">دوّن الـ <strong style="color: var(--accent)">IPv4 Address</strong> — مثلاً <code style="color: var(--accent2); font-family: monospace">192.168.1.100</code></p>
+          <div class="note orange">⚠️ هذا الـ IP لازم تكتبه في setup.py على كل جهاز</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>حدّث ملفات الـ Startup على لابتوبك</h4>
+          <p>عدّل <code style="font-family: monospace; color: var(--accent)">start_backend.bat</code> عشان يشتغل على الشبكة:</p>
+          <div class="cmd-block">@echo off
+cd /d C:\Users\%USERNAME%\Desktop\gamehub-backend-main\gamehub-backend-main
+py manage.py runserver 0.0.0.0:8000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — Each Client -->
+  <div class="section-title">
+    <div class="section-num">4</div>
+    <div><h2>إعداد كل جهاز (×6)</h2><p>كرّر هذي الخطوات على كل جهاز</p></div>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>ثبّت Python على الجهاز</h4>
+          <div class="cmd-block">https://www.python.org/downloads/
+☑️ تأكد من تفعيل: Add Python to PATH</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>انسخ مجلد files على الجهاز</h4>
+          <p>من USB أو عبر الشبكة — حطه على Desktop</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>ثبّت المكتبات</h4>
+          <div class="cmd" onclick="copyCmd(this)">py -m pip install requests pywin32</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>شغّل Setup Wizard</h4>
+          <div class="cmd" onclick="copyCmd(this)">cd C:\Users\%USERNAME%\Desktop\files</div>
+          <div class="cmd" onclick="copyCmd(this)" style="margin-top: 6px">py setup.py</div>
+          <div class="note blue">📝 عند سؤال "عنوان السيرفر" اكتب IP لابتوبك مثلاً: <code style="font-family: monospace">http://192.168.1.100:8000</code></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>اختبر الاتصال</h4>
+          <div class="cmd" onclick="copyCmd(this)">py gamehub_client.py</div>
+          <div class="note green">✅ يجب تشوف: تم فتح الجلسة — ID: X | الجهاز: PC-0X</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>أضف للـ Startup (تشغيل تلقائي)</h4>
+          <p>افتح CMD كـ Administrator:</p>
+          <div class="cmd-block">echo @echo off > "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\gamehub_start.bat"
+echo timeout /t 30 /nobreak >> "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\gamehub_start.bat"
+echo py C:\Users\%USERNAME%\Desktop\files\gamehub_client.py >> "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\gamehub_start.bat"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — Test -->
+  <div class="section-title">
+    <div class="section-num">5</div>
+    <div><h2>الاختبار النهائي</h2><p>تحقق إن كل شي شغّال</p></div>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>شغّل الباك-إند على لابتوبك</h4>
+          <div class="cmd" onclick="copyCmd(this)">py manage.py runserver 0.0.0.0:8000</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>شغّل الفرونت-إند على لابتوبك</h4>
+          <div class="cmd" onclick="copyCmd(this)">npm run dev</div>
+          <div class="note blue">📊 افتح Dashboard: <code style="font-family: monospace">http://localhost:5173</code></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>شغّل جهاز واحد وراقب الـ Dashboard</h4>
+          <p>لما الجهاز يشتغل — رح تشوف الجلسة تفتح تلقائياً في الـ Dashboard بعد 30 ثانية</p>
+          <div class="note green">✅ إذا اشتغل — كرّر على باقي الأجهزة</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>أوقف جهاز وتحقق من إغلاق الجلسة</h4>
+          <p>لما تطفئ الجهاز — الجلسة لازم تنغلق تلقائياً في الـ Dashboard</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-title">
+    <div class="section-num">6</div>
+    <div><h2>قائمة التحقق</h2><p>اضغط على كل خطوة عند إتمامها</p></div>
+  </div>
+
+  <div class="card">
+    <ul class="checklist">
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> شراء راوتر 8 ports + 7 كابلات LAN</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> توصيل كل الأجهزة بالراوتر</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> معرفة IP لابتوبك (ipconfig)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> فتح البورت 8000 في Firewall</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تشغيل الباك-إند على 0.0.0.0:8000</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 1 (PC-01)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 2 (PC-02)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 3 (PC-03)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 4 (PC-04)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 5 (PS-01)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> تثبيت Python + files على جهاز 6 (PS-02)</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> اختبار فتح الجلسة تلقائياً على جهاز واحد</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> اختبار كل الأجهزة الـ 6 مع بعض</li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div> اختبار إغلاق الجلسة عند إطفاء الجهاز</li>
+    </ul>
+  </div>
+
+  <!-- Troubleshooting -->
+  <div class="section-title">
+    <div class="section-num">7</div>
+    <div><h2>مشاكل شائعة</h2></div>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">!</div>
+        <div class="step-content">
+          <h4 style="color: #fca5a5">الجهاز ما يتصل بالسيرفر</h4>
+          <p>تحقق إن الـ IP صحيح في config.ini وإن الباك-إند شغّال بـ 0.0.0.0:8000</p>
+          <div class="cmd" onclick="copyCmd(this)">ping 192.168.1.100</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">!</div>
+        <div class="step-content">
+          <h4 style="color: #fca5a5">الجلسة ما تفتح تلقائياً</h4>
+          <p>شوف الـ log على الجهاز:</p>
+          <div class="cmd" onclick="copyCmd(this)">type C:\Users\%USERNAME%\Desktop\files\gamehub_client.log</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">!</div>
+        <div class="step-content">
+          <h4 style="color: #fca5a5">Connection refused</h4>
+          <p>الـ Firewall مسدود — شغّل هذا الأمر على لابتوبك كـ Administrator:</p>
+          <div class="cmd" onclick="copyCmd(this)">netsh advfirewall firewall add rule name="GameHub" dir=in action=allow protocol=TCP localport=8000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>🎮 GameHub Pro — Cafe Network Setup Guide</p>
+    <p style="margin-top: 6px">Built by <strong>Siraj Masoud</strong> — اضغط أي أمر لنسخه</p>
+  </footer>
+
+</div>
+
+<script>
+  function copyCmd(el) {
+    const text = el.textContent.replace(/^\$ /, '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      el.classList.add('copied');
+      const orig = el.textContent;
+      el.textContent = '✓ تم النسخ!';
+      setTimeout(() => {
+        el.textContent = orig;
+        el.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+  }
+</script>
+</body>
+</html>
